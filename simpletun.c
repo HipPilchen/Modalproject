@@ -50,12 +50,12 @@ char *progname;
  * tun_alloc: allocates or reconnects to a tun/tap device. The caller     *
  *            must reserve enough space in *name.                          *
  **************************************************************************/
-int tun_alloc(char *name, int type) {
+int tun_alloc(char *name, int flags) {
   
   /* Arguments used: 
   char *name is the name of an interface if the user wants to connect to a previsouly allocated interface, 
                 or '\0' if the user is requesting the allocation of a new interface
-  int type is IFF_TUN (to indicate a TUN device) 
+  int flags is IFF_TUN (to indicate a TUN device) 
               or IFF_TAP (to indicate a TAP device) 
               or IFF_NO_PI (to tell the kernel that packets will be pure IP packets with no bytes added)
 
@@ -75,7 +75,7 @@ int tun_alloc(char *name, int type) {
 
   //We initialise the struct ifr:
   memset(&ifr, 0, sizeof(ifr));
-  ifr.ifr_flags = type;
+  ifr.ifr_flags = flags;
 
   //If the name of the device was specified, we write it inside the struct ifr:
   if (*name) {
