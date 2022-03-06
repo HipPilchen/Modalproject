@@ -92,7 +92,8 @@ int tun_alloc(char *name, int flags) {
     return error;
   }
 
-  //If we succeeded, the virtual interface is created and the file_descriptor is associated to it and can be used to communicate.
+  //If we succeeded, the virtual interface is created and the file_descriptor is associated to it :
+  //The program can communicate with the virtual network interface using the file descriptor.
   //We now write the name of the interface to the veriable "name" so that the caller can know it: 
   strcpy(name, ifr.ifr_name);
 
