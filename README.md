@@ -54,3 +54,8 @@ add some debug information. Press ctrl-c on either side to exit (the other end
 will exit too).
 
 The program is very limited, so expect to be disappointed.
+  
+  Qu’est-ce que TUN / TAP?
+
+Contrairement aux périphériques réseau ordinaires dans un système (périphériques physiques acheminant les paquets via des câbles Ethernet), TUN / TAP est une interface complètement virtuelle qui simule ces connexions physiques au sein du noyau du système d’exploitation (la partie du système d’exploitation qui est toujours active dans votre périphérique. mémoire et a un contrôle complet sur tout dans le système).
+  L’avantage de TUN / TAP est que les applications de l’espace utilisateur, telles que les clients VPN, peuvent interagir avec ces appareils comme s’ils étaient réels. Cela permet au système d’exploitation d’injecter des paquets dans la pile réseau régulière selon les besoins, ce qui entraîne des transferts de données comme si des périphériques réseau physiques étaient en cours d’utilisation.
