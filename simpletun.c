@@ -52,16 +52,17 @@ char *progname;
  **************************************************************************/
 int tun_alloc(char *name, int flags) {
   
-  /* Arguments used: 
-  char *name is the name of an interface:if the field is not empty, the call either create a new virtual network interface with the chosen name or an existing one (depending on whether a network interface with this name already exists)
-                or '\0' if the user is requesting the allocation of a new interface
-  int flags is IFF_TUN (to indicate a TUN device) 
-              or IFF_TAP (to indicate a TAP device) 
-              or IFF_NO_PI (to tell the kernel that packets will be pure IP packets with no bytes added).
-	      If we have set IFF_NO_PI in the ifr_flags field, the version of the IP protocol (IPv4 or IPv6) is deduced from the IP version number in the packet. 
-  	      If IFF_NO_PI is not set, 4 bytes (struct tun_pi) are prepended to each packet.
-
-  Return value: the file_descriptor = which the caller will use to talk with the virtual interface
+ /* Arguments used: 
+  * char *name is - the name of an interface:if the field is not empty, the call either create a new virtual network interface 
+  *		    with the chosen name or an existing one (depending on whether a network interface with this name already exists)
+  *               - or '\0' if the user is requesting the allocation of a new interface
+  * int flags is IFF_TUN (to indicate a TUN device) 
+  *              or IFF_TAP (to indicate a TAP device) 
+  *              or IFF_NO_PI (to tell the kernel that packets will be pure IP packets with no bytes added).
+  * If we have set IFF_NO_PI in the ifr_flags field, the version of the IP protocol (IPv4 or IPv6) is deduced from the IP version number in the packet. 
+  * If IFF_NO_PI is not set, 4 bytes (struct tun_pi) are prepended to each packet.
+  *
+  * Return value: the file_descriptor = which the caller will use to talk with the virtual interface
   */
 
   struct ifreq ifr;                     //the structure ifreq describes the virtual interface, it is used to set the IP address and informations. It doesn't work with AF_INET6 (IPv6 addresses) -> use in6_ifreq
@@ -94,23 +95,32 @@ int tun_alloc(char *name, int flags) {
     return error;
   }
 
-  //If we succeeded, the virtual interface is created and the file_descriptor is associated to it :
-  //The program can communicate with the virtual network interface using the file descriptor.
-  //We now write the name of the interface to the veriable "name" so that the caller can know it: 
+ /*
+  * If we succeeded, the virtual interface is created and the file_descriptor is associated to it :
+  * The program can communicate with the virtual network interface using the file descriptor.
+  *
+  * We now write the name of the interface to the veriable "name" so that the caller can know it: 
+  */
+	
   strcpy(name, ifr.ifr_name);
 
   return file_descriptor;
 
-  //The code to attach to an existing tun/tap interface is the same as the code to create one.
+ /*
+  * The code to attach to an existing tun/tap interface is the same as the code to create one.
+  *	
+  * When the the program closes the last file descriptor associated with the TUN/TAP interface, the systems destroys the interface. 
+  * We can prevent the system from destroying the interface by making it made persistent with the TUNSETPERSIST ioctl() or tunctl (only for tap interfaces) or openvpn --mktun 
+  */
 	
-  //When the the program closes the last file descriptor associated with the TUN/TAP interface, the systems destroys the interface. 
-  //We can prevent the system from destroying the interface by making it made persistent with the TUNSETPERSIST ioctl() or tunctl (only for tap interfaces) or openvpn --mktun 
-
 }
 
 
-
-
+/*
+ * We will use the functions read() and write() and not fread() or fwrite()
+ * NB: read and write use file descriptors, but fread and fwrite use the FILE pointers,
+ * which are actually pointers which contain file descriptors and other info about the file opened.
+ */
 
 
 /**************************************************************************
