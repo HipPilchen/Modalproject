@@ -57,7 +57,9 @@ int tun_alloc(char *name, int flags) {
                 or '\0' if the user is requesting the allocation of a new interface
   int flags is IFF_TUN (to indicate a TUN device) 
               or IFF_TAP (to indicate a TAP device) 
-              or IFF_NO_PI (to tell the kernel that packets will be pure IP packets with no bytes added)
+              or IFF_NO_PI (to tell the kernel that packets will be pure IP packets with no bytes added).
+	      If we have set IFF_NO_PI in the ifr_flags field, the version of the IP protocol (IPv4 or IPv6) is deduced from the IP version number in the packet. 
+  	      If IFF_NO_PI is not set, 4 bytes (struct tun_pi) are prepended to each packet.
 
   Return value: the file_descriptor = which the caller will use to talk with the virtual interface
   */
