@@ -305,7 +305,7 @@ int main(int argc, char *argv[]) {
     remote.sin_addr.s_addr = inet_addr(remote_ip);
     remote.sin_port = htons(port);
 
-    /* connection request */
+    //Connection request:
     if (connect(sock_fd, (struct sockaddr*) &remote, sizeof(remote)) < 0) {      //sockaddr and sockaddr_in structures have the same size (16 octets)
       perror("connect()");
       exit(1);
@@ -316,7 +316,7 @@ int main(int argc, char *argv[]) {
     
   }
 	
-  //Second situation: we are the server and wait for a remote host to connect:
+  //Second situation: we are the server and wait for the remote host to connect:
   else {
 
     /* avoid EADDRINUSE error on bind() */
@@ -339,7 +339,7 @@ int main(int argc, char *argv[]) {
       exit(1);
     }
     
-    /* wait for connection request */
+    //We wait for connection request:
     remotelen = sizeof(remote);
     memset(&remote, 0, remotelen);
     if ((net_fd = accept(sock_fd, (struct sockaddr*)&remote, &remotelen)) < 0) {
