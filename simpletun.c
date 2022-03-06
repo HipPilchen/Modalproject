@@ -100,7 +100,10 @@ int tun_alloc(char *name, int flags) {
   return file_descriptor;
 
   //The code to attach to an existing tun/tap interface is the same as the code to create one.
-  //NB: here the interface was not set persistent. To do so, use tunctl (only for tap interfaces) or openvpn --mktun
+	
+  //When the the program closes the last file descriptor associated with the TUN/TAP interface, the systems destroys the interface. 
+  //We can prevent the system from destroying the interface by making it made persistent with the TUNSETPERSIST ioctl() or tunctl (only for tap interfaces) or openvpn --mktun 
+
 }
 
 
