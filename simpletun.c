@@ -53,7 +53,7 @@ char *progname;
 int tun_alloc(char *name, int flags) {
   
   /* Arguments used: 
-  char *name is the name of an interface if the user wants to connect to a previsouly allocated interface, 
+  char *name is the name of an interface:if the field is not empty, the call either create a new virtual network interface with the chosen name or an existing one (depending on whether a network interface with this name already exists)
                 or '\0' if the user is requesting the allocation of a new interface
   int flags is IFF_TUN (to indicate a TUN device) 
               or IFF_TAP (to indicate a TAP device) 
