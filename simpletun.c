@@ -351,7 +351,9 @@ int main(int argc, char *argv[]) {
   }
 
   //At this stage, the client and the server are connected and can communicate.
-  
+  /* net_fd is the network file descriptor (to the peer), tap_fd is the
+     descriptor connected to the tun/tap interface */
+
   /* use select() to handle two descriptors at once */
   maxfd = (tap_fd > net_fd)?tap_fd:net_fd;
 
@@ -359,10 +361,17 @@ int main(int argc, char *argv[]) {
     int ret;
     fd_set rd_set;
 
-    FD_ZERO(&rd_set);
-    FD_SET(tap_fd, &rd_set); FD_SET(net_fd, &rd_set);
+    FD_ZERO(&rd_set);//initialize
+    FD_SET(tap_fd, &rd_set); FD_SET(net_fd, &rd_set);//This macro adds the file descriptor fd to set.  Adding a file descriptor that is already present in the set is a no-op, and does not produce an error.
 
     ret = select(maxfd + 1, &rd_set, NULL, NULL, NULL);
+	  /* select() allows a program to monitor multiple file descriptors,
+       waiting until one or more of the file descriptors become "ready"
+       for some class of I/O operation (e.g., input possible).  A file
+       descriptor is considered ready if it is possible to perform a
+       corresponding I/O operation (e.g., read(2), or a sufficiently
+       small write(2)) without blocking. 1st : This argument should be set to the highest-numbered file
+              descriptor in any of the three sets, plus 1. Then : 3 different set */
 
     if (ret < 0 && errno == EINTR){
       continue;
