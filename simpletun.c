@@ -205,9 +205,12 @@ void usage(void) {
   exit(1);
 }
 
+//We do tunneling:
+
 int main(int argc, char *argv[]) {
   
-  int tap_fd, option;
+  int tap_fd;
+  int option;
   int flags = IFF_TUN;
   char if_name[IFNAMSIZ] = "";
   int maxfd;
@@ -226,7 +229,7 @@ int main(int argc, char *argv[]) {
 
   progname = argv[0];
   
-  /* Check command line options */
+  //We check command line options (to know who is the server and who is the client):
   while((option = getopt(argc, argv, "i:sc:p:uahd")) > 0) {
     switch(option) {
       case 'd':
@@ -279,7 +282,7 @@ int main(int argc, char *argv[]) {
     usage();
   }
 
-  /* initialize tun/tap interface */
+  //We initialize tun/tap interface:
   if ( (tap_fd = tun_alloc(if_name, flags | IFF_NO_PI)) < 0 ) {
     my_err("Error connecting to tun/tap interface %s!\n", if_name);
     exit(1);
@@ -287,15 +290,16 @@ int main(int argc, char *argv[]) {
 
   do_debug("Successfully connected to interface %s\n", if_name);
 
+  //We create a socket to exchange data with the remote host (destination):
   if ( (sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("socket()");
     exit(1);
   }
 
+  //First situation, we are the client and try to connect to the server (the remote host):
   if(cliserv == CLIENT) {
-    /* Client, try to connect to server */
 
-    /* assign the destination address */
+    //We assign the fields for the destination address:
     memset(&remote, 0, sizeof(remote));
     remote.sin_family = AF_INET;
     remote.sin_addr.s_addr = inet_addr(remote_ip);
@@ -310,8 +314,10 @@ int main(int argc, char *argv[]) {
     net_fd = sock_fd;
     do_debug("CLIENT: Connected to server %s\n", inet_ntoa(remote.sin_addr));
     
-  } else {
-    /* Server, wait for connections */
+  }
+	
+  //Second situation: we are the server and wait for a remote host to connect:
+  else {
 
     /* avoid EADDRINUSE error on bind() */
     if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, (char *)&optval, sizeof(optval)) < 0) {
@@ -343,6 +349,8 @@ int main(int argc, char *argv[]) {
 
     do_debug("SERVER: Client connected from %s\n", inet_ntoa(remote.sin_addr));
   }
+
+  //At this stage, the client and the server are connected and can communicate.
   
   /* use select() to handle two descriptors at once */
   maxfd = (tap_fd > net_fd)?tap_fd:net_fd;
