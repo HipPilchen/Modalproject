@@ -66,3 +66,8 @@ Contrairement aux périphériques réseau ordinaires dans un système (périphé
   - Ne prend pas en compte que read_n() et cwrite() peuvent bloquer
   - Implémenter TCP et aussi UDP
   - Regarder le TCP-over-TCP pourquoi c'est pas bien
+
+ Questions :
+  - linux include <linux/if_tun.h>
+  - Comment le local host récupère l'info de son interface ? (décodage) Et comment le local host écrit à son interface virtuelle ?
+  - Pour rendre persistent ? tunctl ou ioctl(,TUNSETPERSIST) ou openvpn --mktun
