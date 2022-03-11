@@ -219,8 +219,7 @@ void usage(void) {
 
 int main(int argc, char *argv[]) {
   
-  int tap_fd;
-  int option;
+  int tap_fd;   //our file_descriptor
   int flags = IFF_TUN;
   char if_name[IFNAMSIZ] = "";
   int maxfd;
@@ -239,7 +238,9 @@ int main(int argc, char *argv[]) {
 
   progname = argv[0];
   
-  //We check command line options (to know who is the server and who is the client):
+  //Step 1: We check command line options (to know who is the server and who is the client):
+	
+  int option;
   while((option = getopt(argc, argv, "i:sc:p:uahd")) > 0) {
     switch(option) {
       case 'd':
@@ -272,15 +273,18 @@ int main(int argc, char *argv[]) {
         usage();
     }
   }
-
+	
+  
   argv += optind;
-  argc -= optind;
-
+  argc -= optind; 
+	
+  //Since one option is linked to one argument maximum, we check that we don't have more arguments than options:
   if(argc > 0) {
     my_err("Too many options!\n");
     usage();
   }
-
+	
+  //We also check that the command gives proper information about the interface and the client/server:
   if(*if_name == '\0') {
     my_err("Must specify interface name!\n");
     usage();
@@ -292,21 +296,24 @@ int main(int argc, char *argv[]) {
     usage();
   }
 
-  //We initialize tun/tap interface:
-  if ( (tap_fd = tun_alloc(if_name, flags | IFF_NO_PI)) < 0 ) {
+  //Step 2: We initialize tun/tap interface:
+  if ((tap_fd = tun_alloc(if_name, flags | IFF_NO_PI)) < 0 ) {
     my_err("Error connecting to tun/tap interface %s!\n", if_name);
     exit(1);
   }
 
+  //And we debug:
   do_debug("Successfully connected to interface %s\n", if_name);
 
   //We create a socket to exchange data with the remote host (destination):
-  if ( (sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     perror("socket()");
     exit(1);
   }
 
-  //First situation, we are the client and try to connect to the server (the remote host):
+  //Step 3: We do the TCP connection. Two situations are possible : either we're the client or the server.
+	
+  //First situation, we are the client and try to connect to the server (the remote host) with TCP:
   if(cliserv == CLIENT) {
 
     //We assign the fields for the destination address:
@@ -326,7 +333,7 @@ int main(int argc, char *argv[]) {
     
   }
 	
-  //Second situation: we are the server and wait for the remote host to connect:
+  //Second situation: we are the server and wait for the remote host to connect via TCP:
   else {
 
     /* avoid EADDRINUSE error on bind() */
@@ -361,10 +368,13 @@ int main(int argc, char *argv[]) {
   }
 
   //At this stage, the client and the server are connected and can communicate.
-  /* net_fd is the network file descriptor (to the peer), tap_fd is the
-     descriptor connected to the tun/tap interface */
+  //net_fd is the network file descriptor (for the remote), 
+  //tap_fd is the file descriptor connected to the tun/tap interface (so our file descriptor)
 
-  /* use select() to handle two descriptors at once */
+  //Step 4: sending data:
+	
+	
+  //We use select() to handle two descriptors at once:
   maxfd = (tap_fd > net_fd)?tap_fd:net_fd;
 
   while(1) {
