@@ -68,8 +68,8 @@ Contrairement aux périphériques réseau ordinaires dans un système (périphé
   - Regarder le TCP-over-TCP pourquoi c'est pas bien
 
  Questions :
-  - linux include <linux/if_tun.h> --> bibliothèque libpcap sur macOS
+  - linux include <linux/if_tun.h> --> bibliothèque libpcap sur macOS. 1. installer homebrew
   - Comment le local host récupère l'info de son interface ? (décodage) Et comment le local host écrit à son interface virtuelle ?
   - Pour rendre persistent ? tunctl ou ioctl(,TUNSETPERSIST) ou openvpn --mktun
 
-  qd on envoie données sur réseau, on envoie table de routage (qui dit: ce packet est envoyé à telle itneface). Par ex afficher le packet sous forem hexadécimale sur l'écran - boucle sur le buffer et printf. On peut le garder, le chiffrer, l'envoyer via le réseau. tap interface = comme un robinet, on arrive à extraire un paquet. --> intercepter le paquet sortant, le prendre en copie et fait qqch. ON fait ce qu'on veut du buffer, on peut l'afficher, l'encoder, écrire une copie sur le disque etc.
+  qd on envoie données sur réseau, on envoie table de routage (qui dit: ce packet est envoyé à telle itneface). Par ex afficher le packet sous forme hexadécimale sur l'écran - boucle sur le buffer et printf. On peut le garder, le chiffrer, l'envoyer via le réseau. tap interface = comme un robinet, on arrive à extraire un paquet. --> intercepter le paquet sortant, le prendre en copie et fait qqch. ON fait ce qu'on veut du buffer, on peut l'afficher, l'encoder, écrire une copie sur le disque etc.
