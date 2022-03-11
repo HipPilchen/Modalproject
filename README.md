@@ -68,7 +68,14 @@ Contrairement aux périphériques réseau ordinaires dans un système (périphé
   - Regarder le TCP-over-TCP pourquoi c'est pas bien
 
  Questions :
-  - linux include <linux/if_tun.h> --> bibliothèque libpcap sur macOS. -> installer homebrew puis git puis libpcap (packet capture).
+  - linux include <linux/if_tun.h> --> bibliothèque libpcap sur macOS. 
+  -> installer homebrew : $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  puis git : 
+  $ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/maiapecastaings/.zprofile
+  $ eval "$(/opt/homebrew/bin/brew shellenv)"
+  $ brew install git
+  puis libpcap (packet capture): $ brew install libpcap
+  puis pour avoir le /dev/net/tun : $ brew install Caskroom/cask/tuntap
   - Comment le local host récupère l'info de son interface ? (décodage) Et comment le local host écrit à son interface virtuelle ?
   - Pour rendre persistent ? tunctl ou ioctl(,TUNSETPERSIST) ou openvpn --mktun
 
