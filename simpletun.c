@@ -25,7 +25,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <net/if.h>           //to use the structure ifreq in the tun_alloc function. We don't use linux/if.h because we're not using the linux kernel nor linux userspace.
-#include <linux/if_tun.h>     //to create the virtual interface
+// #include <linux/if_tun.h>     //to create the virtual interface
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
