@@ -43,12 +43,11 @@
 #define SERVER 1
 #define PORT 55555
 
-/*
-In case we don't need to use libbpcap but only need the IFF_TUN, IFF_SET, TUNSETIFF:
+//In case we don't need to use libbpcap but only need the IFF_TUN, IFF_SET, TUNSETIFF:
 #define IFF_TUN		0x0001
 #define IFF_TAP		0x0002
 #define TUNSETIFF     _IOW('T', 202, int) 
-*/
+#define IFF_NO_PI	0x1000
 
 int debug;
 char *progname;
