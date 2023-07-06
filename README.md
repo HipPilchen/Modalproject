@@ -27,11 +27,17 @@ simpletun -h
 Refer to http://backreference.org/2010/03/26/tuntap-interface-tutorial/ for 
 more information on tun/tap interfaces in Linux in general.
 
-Install tuntap
+Install tuntap:
+
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 $ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/maiapecastaings/.zprofile
+
 $ eval "$(/opt/homebrew/bin/brew shellenv)"
+
 $ brew install git
+
 $ brew install libpcap
+
 $ brew install Caskroom/cask/tuntap
 
